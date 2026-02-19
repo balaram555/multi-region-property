@@ -1,17 +1,26 @@
-import requests
 import threading
+import requests
 import uuid
 
-def update():
-    requests.put(
-        "http://localhost:8080/us/properties/1",
-        json={"price": 999999, "version": 1},
-        headers={"X-Request-ID": str(uuid.uuid4())}
-    )
+URL = "http://localhost:8080/us/properties/10"
+
+def update_property():
+    headers = {
+        "Content-Type": "application/json",
+        "X-Request-ID": str(uuid.uuid4())
+    }
+    payload = {
+        "price": 700000,
+        "version": 1
+    }
+
+    response = requests.put(URL, json=payload, headers=headers)
+    print(response.status_code, response.text)
 
 threads = []
+
 for _ in range(2):
-    t = threading.Thread(target=update)
+    t = threading.Thread(target=update_property)
     threads.append(t)
     t.start()
 
